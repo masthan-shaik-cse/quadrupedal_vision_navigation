@@ -1,0 +1,36 @@
+<mujoco model="quadruped_vision">
+    <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+    <option timestep="0.002" gravity="0 0 -9.81" iterations="50" tolerance="1e-4"/>
+    
+    <default>
+        <joint damping="0.5" stiffness="1.0" limited="true"/>
+        <geom friction="1 0.5 0.5" density="1000"/>
+    </default>
+
+    <worldbody>
+        <light pos="0 0 3" dir="0 0 -1" directional="true"/>
+        <!-- Fluctuating floor layout setup -->
+        <geom name="floor" type="plane" size="20 20 0.1" rgba="0.8 0.9 0.8 1"/>
+        
+        <body name="torso" pos="0 0 0.4">
+            <joint type="free"/>
+            <geom type="box" size="0.25 0.15 0.05" rgba="0.2 0.2 0.6 1"/>
+            
+            <!-- Spatial depth sensor attachment -->
+            <site name="depth_camera" pos="0.3 0 0.05" euler="0 15 0" size="0.02" rgba="0 1 0 1"/>
+            
+            <!-- Simplified Quadruped Legs -->
+            <!-- Front Left -->
+            <body name="fl_hip" pos="0.2 0.15 0">
+                <joint name="fl_hip_joint" type="hinge" axis="1 0 0" range="-30 30"/>
+                <geom type="capsule" size="0.04" fromto="0 0 0 0 0 -0.2"/>
+            </body>
+            <!-- Additional legs omitted for brevity, full dynamic modeling requires 12 DOF -->
+        </body>
+    </worldbody>
+
+    <!-- Synthetic Spatial Depth Field Sensors -->
+    <sensor>
+        <depth name="vision_sensor" site="depth_camera"/>
+    </sensor>
+</mujoco>
